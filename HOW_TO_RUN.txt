@@ -1,0 +1,62 @@
+==============================================
+ BIOGAS LIMS — HOW TO RUN
+==============================================
+
+REQUIREMENTS
+------------
+- Node.js v18 or higher (download from nodejs.org)
+- Internet connection (Firebase is cloud-based)
+
+FIRST TIME SETUP
+----------------
+1. Open a terminal / command prompt
+2. Navigate to this folder:
+     cd biogas-mis
+
+3. Install dependencies:
+     npm install
+
+4. Start the app:
+     npm run dev
+
+5. Open your browser and go to:
+     http://localhost:5173
+
+LOGIN
+-----
+- Register a new account on the login page
+- Each user's data is completely separate
+- Your supervisor registers her own account and sees only her data
+
+NEW MODULES IN THIS VERSION
+----------------------------
+  Dashboard         — Full LIMS overview with pending QC alerts
+  Inoculum          — Register and track inoculum batches
+  Characterization  — TS/VS measurement with auto-calculation (VDI 4630)
+  BMP Experiment    — Design assay batches, S/I ratio, reactor setup
+  Gas Monitoring    — Daily gas log with VDI 4630 normalization
+  QC & Approval     — Blank correction, CV check, dual sign-off
+
+EXISTING MODULES (UPGRADED)
+----------------------------
+  Biomethane / BMP  — Sample entry (now user-scoped)
+  Water & Wastewater — Sample entry (now user-scoped)
+  Soil & Fertilizer  — Sample entry (now user-scoped)
+  Reports & Export   — PDF/Excel (now user-scoped)
+  Settings           — Custom thresholds (now with unsaved-change warning)
+
+DATA SEPARATION
+---------------
+Every new record you save is tagged with your user ID.
+Your supervisor's records are invisible to you and vice versa.
+Existing records saved before this upgrade are accessible to
+the account that saved them.
+
+FIRESTORE COLLECTIONS USED
+---------------------------
+  bmp_samples, water_quality, wastewater, soil_samples  (existing)
+  inoculum_batches, characterization                     (new)
+  bmp_experiments, gas_measurements                      (new)
+  users                                                  (auth profiles)
+
+==============================================

@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Mapúa University Theme ───────────────────────────────
+   Primary:  Cardinal Red  #7B1C1C  (muted, not eye-straining)
+   Accent:   Gold          #C9A84C
+   BG dark:  Deep charcoal  #111418
+   BG mid:   Dark warm gray #1A1D23
+   BG input: Slightly warmer #21252D
+   Border:   Subtle warm    #2E3340
+*/
+:root {
+  --bg:      #111418;
+  --bg2:     #1A1D23;
+  --bg3:     #21252D;
+  --border:  #2E3340;
+
+  /* Mapúa brand */
+  --red:     #C0392B;      /* cardinal red — primary accent */
+  --red2:    #922B21;      /* darker red for hover */
+  --red-dim: #7B1C1C;      /* very muted red for subtle use */
+  --gold:    #C9A84C;      /* Mapúa gold — secondary accent */
+  --gold2:   #A6882E;
+
+  /* Status colors — desaturated for comfort */
+  --pass:    #2E7D52;      /* deep green */
+  --pass-lt: #3A9E68;
+  --review:  #B8860B;      /* dark goldenrod */
+  --review-lt:#D4A017;
+  --fail:    #A93226;      /* muted red */
+  --fail-lt: #C0392B;
+
+  /* Neutrals */
+  --blue:    #3A7CC4;      /* muted steel blue */
+  --purple:  #7059A6;      /* muted purple */
+
+  --text:    #E8E2D9;      /* warm white */
+  --text2:   #9A9490;      /* warm mid gray */
+  --text3:   #5E5A56;      /* warm dim gray */
+}
+
+html, body, #root {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+input, select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--red); }
+select option { background: var(--bg3); color: var(--text); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.05em;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(46,51,64,0.6);
+  color: var(--text2);
+}
+tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+tr:last-child td { border-bottom: none; }
