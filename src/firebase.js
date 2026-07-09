@@ -8,7 +8,7 @@ const firebaseConfig = {
   projectId:         "biomethane-mis",
   storageBucket:     "biomethane-mis.firebasestorage.app",
   messagingSenderId: "199660682219",
-  appId:             "1:199660682199:web:221c0f7997ddc0fbaff7ae",
+  appId:             "1:199660682219:web:221c0f7997ddc0fbaff7ae",
   measurementId:     "G-L2YYPE31RC"
 }
 
