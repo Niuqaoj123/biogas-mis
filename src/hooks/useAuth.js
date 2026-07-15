@@ -3,19 +3,19 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 
-// Cache role in sessionStorage — instant on revisit, no Firestore call
-function getCached(uid) {
-  try { return sessionStorage.getItem(`biogas_role_${uid}`) } catch { return null }
-}
-function setCached(uid, role) {
-  try { sessionStorage.setItem(`biogas_role_${uid}`, role) } catch {}
-}
+function getCached(uid)       { try { return sessionStorage.getItem(`br_${uid}`) } catch { return null } }
+function setCached(uid, role) { try { sessionStorage.setItem(`br_${uid}`, role)  } catch {} }
 
 export function useAuth() {
+  // Pre-check localStorage for existing Firebase auth session
+  // Firebase stores auth state as 'firebase:authUser:...' in localStorage
+  const hasExistingSession = Object.keys(localStorage).some(k => k.startsWith('firebase:authUser'))
+
   const [user,    setUser]    = useState(null)
   const [role,    setRole]    = useState(null)
   const [uid,     setUid]     = useState(null)
-  const [loading, setLoading] = useState(true)
+  // If no existing session, we know immediately user is logged out → no loading
+  const [loading, setLoading] = useState(hasExistingSession)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (fw) => {
@@ -25,27 +25,19 @@ export function useAuth() {
 
         const cached = getCached(fw.uid)
         if (cached) {
-          // Instant — use cache, skip network call
           setRole(cached)
           setLoading(false)
-          // Refresh silently in background
-          getDoc(doc(db, 'users', fw.uid)).then(snap => {
-            if (snap.exists()) {
-              const r = snap.data().role || 'Lab Tech'
-              setRole(r)
-              setCached(fw.uid, r)
-            }
-          }).catch(() => {})
+          // Silently refresh role in background
+          getDoc(doc(db, 'users', fw.uid))
+            .then(snap => { if (snap.exists()) { const r = snap.data().role || 'Lab Tech'; setRole(r); setCached(fw.uid, r) } })
+            .catch(() => {})
         } else {
-          // First time — fetch then cache
           try {
             const snap = await getDoc(doc(db, 'users', fw.uid))
             const r = snap.exists() ? (snap.data().role || 'Lab Tech') : 'Lab Tech'
             setRole(r)
             setCached(fw.uid, r)
-          } catch {
-            setRole('Lab Tech')
-          }
+          } catch { setRole('Lab Tech') }
           setLoading(false)
         }
       } else {
