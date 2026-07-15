@@ -15,7 +15,7 @@ export function useAuth() {
   const [role,    setRole]    = useState(null)
   const [uid,     setUid]     = useState(null)
   // If no existing session, we know immediately user is logged out → no loading
-  const [loading, setLoading] = useState(hasExistingSession)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (fw) => {
