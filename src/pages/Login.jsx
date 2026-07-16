@@ -43,10 +43,45 @@ export default function Login() {
   const [loading,   setLoading]   = useState(false)
   const [resetMode, setResetMode] = useState(false)
 
+  const [blocked, setBlocked] = useState(false)
+
+  // Detect if Firebase/Google APIs are being blocked by ad blocker
+  useEffect(() => {
+    const img = new Image()
+    img.onload  = () => setBlocked(false)
+    img.onerror = () => setBlocked(true)
+    img.src = 'https://www.gstatic.com/firebasejs/1x1.png?' + Date.now()
+    setTimeout(() => setBlocked(b => b === false ? false : true), 3000)
+  }, [])
+
   // Pre-fill remembered email
   useEffect(() => {
     const saved = localStorage.getItem('biogas_remembered_email')
     if (saved) setEmail(saved)
+  }, [])
+
+  // Detect if Firebase/Firestore is being blocked by ad blocker
+  useEffect(() => {
+    const testUrl = 'https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?database=projects%2Fbiomethane-mis%2Fdatabases%2F(default)&gsessionid=test&SID=test&RID=test&AID=0&zx=test&t=1'
+    fetch(testUrl, { method: 'GET', mode: 'no-cors' })
+      .then(() => setBlocked(false))
+      .catch(() => setBlocked(true))
+    // Simpler check: if net::ERR_BLOCKED_BY_CLIENT fires, blocked=true
+    const img = new Image()
+    img.onerror = () => {}
+    img.onload  = () => {}
+    // Check via script tag approach
+    const check = async () => {
+      try {
+        await fetch('https://firestore.googleapis.com/', { mode: 'no-cors', cache: 'no-store' })
+        setBlocked(false)
+      } catch (e) {
+        if (e.message?.includes('blocked') || e.message?.includes('Failed to fetch')) {
+          setBlocked(true)
+        }
+      }
+    }
+    check()
   }, [])
 
   async function handleSubmit(e) {
@@ -107,6 +142,23 @@ export default function Login() {
             <div style={{ fontFamily: 'Space Mono', fontSize: 11, color: '#64748b' }}>Laboratory Information System</div>
           </div>
         </div>
+
+        {/* Ad blocker warning banner */}
+        {blocked && (
+          <div style={{ background:'rgba(245,158,11,0.1)', border:'1px solid rgba(245,158,11,0.4)', borderRadius:10, padding:'12px 14px', marginBottom:20, fontSize:12, lineHeight:1.7 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" style={{flexShrink:0}}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span style={{ fontWeight:600, color:'#f59e0b' }}>Ad blocker detected</span>
+            </div>
+            <span style={{ color:'#94a3b8' }}>
+              Your browser or extension is blocking Firebase — this system cannot load properly.<br/>
+              <strong style={{color:'#e2e8f0'}}>Fix options:</strong><br/>
+              • Use <strong style={{color:'#e2e8f0'}}>Google Chrome</strong> or <strong style={{color:'#e2e8f0'}}>Microsoft Edge</strong><br/>
+              • Or disable your ad blocker / Brave Shields for this site<br/>
+              • Or open in an <strong style={{color:'#e2e8f0'}}>Incognito / Private window</strong>
+            </span>
+          </div>
+        )}
 
         <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 6, color: '#e2e8f0' }}>
           {resetMode ? 'Reset password' : mode === 'login' ? 'Welcome back' : 'Create account'}
