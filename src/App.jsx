@@ -17,10 +17,10 @@ import Sidebar        from './components/Sidebar'
 function Loading() {
   return (
     <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:'#0d1117', gap:16 }}>
-      <div style={{ width:36, height:36, background:'#3ecf8e', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ width:36, height:36, background:'#C0392B', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center' }}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d1117" strokeWidth="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
-      <div style={{ color:'#3ecf8e', fontFamily:'Space Mono', fontSize:13, letterSpacing:'0.1em' }}>BIOGAS LIMS</div>
+      <div style={{ color:'#C0392B', fontFamily:'Space Mono', fontSize:13, letterSpacing:'0.1em' }}>BIOGAS MIS</div>
       <div style={{ color:'#64748b', fontFamily:'Space Mono', fontSize:11 }}>Loading...</div>
     </div>
   )
